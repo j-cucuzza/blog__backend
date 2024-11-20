@@ -72,7 +72,7 @@ def create_Cuisine(token: Annotated[str, Depends(oauth2_scheme)], cuisine: cuisi
     session.refresh(db_cuisine)
     return db_cuisine
 
-@router.post("/cuisines/", response_model=list[cuisine_model.CuisinePublic])
+@router.get("/cuisines/", response_model=list[cuisine_model.CuisinePublic])
 def read_Cuisines(
     session: SessionDep,
 ):
