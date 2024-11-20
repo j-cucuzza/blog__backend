@@ -74,7 +74,7 @@ def create_tag(token: Annotated[str, Depends(oauth2_scheme)], tag: tag_model.Tag
     session.refresh(db_tag)
     return db_tag
 
-@router.post("/tags/", response_model=list[tag_model.TagPublic])
+@router.get("/tags/", response_model=list[tag_model.TagPublic])
 def read_tags(
     session: SessionDep,
     offset: int = 0,
@@ -82,3 +82,12 @@ def read_tags(
 ):
     tags = session.exec(select(tag_model.Tag).offset(offset).limit(limit)).all()
     return tags
+
+@router.delete("/tag/{tag_id}")
+def delete_tag(token: Annotated[str, Depends(oauth2_scheme)], tag_id: int, session: SessionDep):
+    tag = session.get(tag_model.Tag, tag_id)
+    if not tag:
+        raise HTTPException(status_code=404, detail="Tag not found")
+    session.delete(tag)
+    session.commit()
+    return {"ok": True}

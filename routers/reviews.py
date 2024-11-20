@@ -78,3 +78,13 @@ def read_Cuisines(
 ):
     cuisines = session.exec(select(cuisine_model.Cuisine)).all()
     return cuisines
+
+
+@router.delete("/cuisine/{cuisine_id}")
+def delete_cuisine(token: Annotated[str, Depends(oauth2_scheme)], cuisine_id: int, session: SessionDep):
+    cuisine = session.get(cuisine_model.Cuisine, cuisine_id)
+    if not cuisine:
+        raise HTTPException(status_code=404, detail="Cuisine not found")
+    session.delete(cuisine)
+    session.commit()
+    return {"ok": True}

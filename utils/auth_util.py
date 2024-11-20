@@ -22,7 +22,7 @@ def generate_token(
     data = {"sub": username}
     expires = datetime.now(timezone.utc) + timedelta(minutes=int(expires_delta))
     data |= {"exp": expires}
-
+    
     return jwt.encode(data, SECRET_KEY, ALGORITHM)
 
 def decode_token(token):
