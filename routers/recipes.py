@@ -1,7 +1,12 @@
 from typing import Annotated
 from sqlmodel import Session, select
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import HTMLResponse, JSONResponse
 from database import SessionDep, oauth2_scheme
+
+from utils import (
+    generate_html as gen_html
+)
 
 from models import (
     recipe as recipe_model,
@@ -62,6 +67,39 @@ def delete_recipe(token: Annotated[str, Depends(oauth2_scheme)], recipe_id: int,
     session.commit()
     return {"ok": True}
 
+#  response_model=list[recipe_model.RecipePublicWithTag]
+@router.get("/all/html", response_class=HTMLResponse)
+def get_recipes_html(session: SessionDep, tag: str = "all"):
+    if tag == "all":
+        statement = select(recipe_model.Recipe)
+    else:
+        statement = select(recipe_model.Recipe).where(recipe_model.Recipe.tag_id == int(tag))
+    results = session.exec(statement).all()
+    
+    if not results:
+        return ""
+
+    html = gen_html.generate_recipes(results)
+
+    return html
+
+@router.get("/one/html", response_class=HTMLResponse)
+def get_recipe_html(session: SessionDep, id: int = 0):
+    statement = select(recipe_model.Recipe).where(recipe_model.Recipe.id == int(id))
+    recipe = session.exec(statement).all()[0]
+
+    html = ""
+    
+    if not recipe:
+        html = gen_html.generate_error_html()
+        return html
+    
+    html = gen_html.generate_recipe(recipe)
+
+    response = HTMLResponse(content=html)
+    response.headers["X-Page-Title"] = recipe.name
+    response.headers["X-Page-Description"] = f"{recipe.servings} servings, {recipe.calories} calories, {recipe.protein}g protein"
+    return response
 
 ########
 # TAGS #
@@ -91,3 +129,10 @@ def delete_tag(token: Annotated[str, Depends(oauth2_scheme)], tag_id: int, sessi
     session.delete(tag)
     session.commit()
     return {"ok": True}
+
+@router.get("/tags/html", response_class=HTMLResponse)
+def get_tags_html(session: SessionDep):
+    tags = session.exec(select(tag_model.Tag))
+    html = gen_html.generate_tags(tags)
+
+    return html
