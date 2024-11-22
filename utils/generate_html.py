@@ -42,7 +42,7 @@ def generate_recipes(recipes: list[recipe_model.Recipe]):
                             <figure class="image is-4by3">
                             <img
                                 style="object-fit: cover"
-                                src="/public/static/img/{slug}.jpg"
+                                src="/static/img/{slug}.jpg"
                                 alt="Placeholder image"
                             />
                             </figure>
