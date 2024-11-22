@@ -43,7 +43,8 @@ def generate_recipes(recipes: list[recipe_model.Recipe]):
                             <img
                                 style="object-fit: cover"
                                 src="/static/img/{slug}.jpg"
-                                alt="Placeholder image"
+                                onerror="this.src='/static/img/image-not-found.jpg'"
+                                alt="{recipe.name} image"
                             />
                             </figure>
                         </div>
@@ -111,7 +112,8 @@ def generate_recipe(recipe: recipe_model.Recipe):
                 <img
                     style="object-fit: cover"
                     src="/static/img/{slug}.jpg"
-                    alt="Placeholder image"
+                    onerror="this.src='/static/img/image-not-found.jpg'"
+                    alt="{recipe.name} image"
                 />
                 </figure>
             </div>
