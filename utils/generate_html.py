@@ -55,7 +55,7 @@ def generate_recipes(recipes: list[recipe_model.Recipe]):
                             </div>
                             </div>
 
-                            <div class="content" style="overflow: scroll; max-height: 8rem" >
+                            <div class="content" style="max-height: 8rem" >
                             <nav class="level">
                                 <div class="level-item">
                                     <span class="title is-7">{recipe.servings} SERVINGS</span>
