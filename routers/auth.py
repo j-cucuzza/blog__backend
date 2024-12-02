@@ -20,34 +20,34 @@ router = APIRouter(
     tags=["auth"],
 )
 
-@router.post("/signup", response_model=user_model.UserPublic)
-async def create_user(
-    user: Annotated[OAuth2PasswordRequestForm, Depends()]
-):
-    try:
-        with Session(engine) as db:
-            existing_user = (
-                db.query(user_model.User)
-                .filter(user_model.User.username == user.username)
-                .first()
-            )
-            if not existing_user:
-                user.password = encrypt_password(user.password)
-                db_user = user_model.User.model_validate(user)
-                db.add(db_user)
-                db.commit()
-                db.refresh(db_user)
-                return db_user
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail="Internal Server Error",
+# @router.post("/signup", response_model=user_model.UserPublic)
+# async def create_user(
+#     user: Annotated[OAuth2PasswordRequestForm, Depends()]
+# ):
+#     try:
+#         with Session(engine) as db:
+#             existing_user = (
+#                 db.query(user_model.User)
+#                 .filter(user_model.User.username == user.username)
+#                 .first()
+#             )
+#             if not existing_user:
+#                 user.password = encrypt_password(user.password)
+#                 db_user = user_model.User.model_validate(user)
+#                 db.add(db_user)
+#                 db.commit()
+#                 db.refresh(db_user)
+#                 return db_user
+#     except Exception as e:
+#         raise HTTPException(
+#             status_code=500,
+#             detail="Internal Server Error",
 
-        ) from e
-    raise HTTPException(
-        status_code=409,
-        detail="User already exists"
-    )
+#         ) from e
+#     raise HTTPException(
+#         status_code=409,
+#         detail="User already exists"
+#     )
 
 @router.post("/token", response_model=token_model.Token)
 async def login_for_token(

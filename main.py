@@ -13,10 +13,6 @@ routers = [
 ]
 
 origins = [
-    "http://localhost:3000",
-    "http://localhost:8000",
-    "https://localhost:3000",
-    "https://localhost:8000",
     "https://www.dippingsauce.net",
     "https://admin.dippingsauce.net",
 ]
