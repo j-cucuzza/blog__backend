@@ -37,7 +37,7 @@ def generate_recipes(recipes: list[recipe_model.Recipe]):
             slug = generate_slug(recipe.name)
             gen_html += f"""
                 <div class="cell">
-                    <div class="card">
+                    <div class="card" style="height: 100%;">
                         <div class="card-image">
                             <figure class="image is-4by3">
                             <img
@@ -50,22 +50,31 @@ def generate_recipes(recipes: list[recipe_model.Recipe]):
                         </div>
                         <div class="card-content">
                             <div class="media">
-                            <div class="media-content">
+                            <div class="media-content" style="min-height: 5rem">
                                 <p class="title is-4">{recipe.name}</p>
                                 <p class="subtitle is-6"><span class="tag is-warning">{recipe.tag.name}</span></p>
                             </div>
                             </div>
 
-                            <div class="content" style="max-height: 8rem" >
-                            <nav class="level">
-                                <div class="level-item">
-                                    <span class="title is-7">{recipe.servings} SERVINGS</span>
+                            <div class="content" style="max-height: 8rem; min-height: 6rem;" >
+                            <nav class="level is-mobile">
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                        <p class="title is-5">{recipe.servings}</p>
+                                        <p class="title is-6">SERVINGS</p>
+                                    </div>
                                 </div>
-                                <div class="level-item">
-                                    <span class="title is-7">{recipe.calories} CALORIES</span>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                        <p class="title is-5">{recipe.calories}</p>
+                                        <p class="title is-6">CALORIES</p>
+                                    </div>
                                 </div>
-                                <div class="level-item">
-                                    <span class="title is-7">{recipe.protein}g PROTEIN</span>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                        <p class="title is-5">{recipe.protein}g</p>
+                                        <p class="title is-6">PROTEIN</p>
+                                    </div>
                                 </div>
                             </nav>
                             <br />
@@ -127,16 +136,25 @@ def generate_recipe(recipe: recipe_model.Recipe):
             </div>
             <div class="card-content">
                 <div class="content">
-                    <nav class="level">
-                        <div class="level-item">
-                            <span class="title is-6">{recipe.servings} SERVINGS</span>
-                        </div>
-                        <div class="level-item">
-                            <span class="title is-6">{recipe.calories} CALORIES</span>
-                        </div>
-                        <div class="level-item">
-                            <span class="title is-6">{recipe.protein}g PROTEIN</span>
-                        </div>
+                    <nav class="level is-mobile">
+                        <div class="level-item has-text-centered">
+                                    <div>
+                                        <p class="title is-5">{recipe.servings}</p>
+                                        <p class="title is-6">SERVINGS</p>
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                        <p class="title is-5">{recipe.calories}</p>
+                                        <p class="title is-6">CALORIES</p>
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                        <p class="title is-5">{recipe.protein}g</p>
+                                        <p class="title is-6">PROTEIN</p>
+                                    </div>
+                                </div>
                     </nav>
                     <br />
                     <div class="columns is-centered">
