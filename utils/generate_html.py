@@ -82,7 +82,7 @@ def generate_recipes(recipes: list[recipe_model.Recipe]):
                             
                             <nav class="level">
                                 <div class="level-item">
-                                    <a href="/view-recipe.htm?id={recipe.id}">
+                                    <a href="/view-recipe.htm?id={recipe.id}&name={recipe.name}">
                                         <button class="button is-primary">View Recipe</button>
                                     </a>
                                 </div>
@@ -171,6 +171,12 @@ def generate_recipe(recipe: recipe_model.Recipe):
                         {instructions}
                         </div>
                     </div>
+                    <br />
+                    <nav class="level">
+                        <div class="level-item">
+                            <button class="button is-primary" id="share-button" onClick="shareRecipe('{recipe.name}')">Share Recipe</button>
+                        </div>
+                    </nav>
                 </div>
             </div>
         </div>
