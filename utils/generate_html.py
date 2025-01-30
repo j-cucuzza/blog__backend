@@ -3,7 +3,9 @@ import markdown
 
 from models import (
     tag as tag_model,
-    recipe as recipe_model
+    cuisine as cuisine_model,
+    recipe as recipe_model,
+    review as review_model
 )
 
 def generate_slug(string: str):
@@ -12,6 +14,18 @@ def generate_slug(string: str):
     string = re.sub(r'[\s-]+', '-', string).strip('-')
 
     return string
+
+def generate_stars(rating: int):
+    gen_html = ""
+
+    for i in range(rating):
+        gen_html += f"""
+            <span key={i} className="icon">
+                <i className="fa-solid fa-star"></i>
+                </span>
+            """
+    
+    return gen_html
 
 def generate_markdown(string: str):
     return markdown.markdown(string, extensions=['tables'])
@@ -26,6 +40,18 @@ def generate_tags(tags: list[tag_model.Tag]):
             <option value={tag.id}>{tag.name}</option>
         """
 
+    return gen_html
+
+def generate_cuisines(cuisines: list[cuisine_model.Cuisine]):
+    gen_html = """
+        <option value="all" selected>Select Filter</option>
+    """
+
+    for cuisine in cuisines:
+        gen_html += f"""
+            <option value={cuisine.id}>{cuisine.name}</option>
+        """
+    
     return gen_html
 
 def generate_recipes(recipes: list[recipe_model.Recipe]):
@@ -93,6 +119,61 @@ def generate_recipes(recipes: list[recipe_model.Recipe]):
             """
 
         return gen_html
+
+    return gen_html
+
+def generate_reviews(reviews: list[review_model.Review]):
+    gen_html = ""
+    
+    if (len(reviews) > 0):
+        
+        for review in reviews:
+            slug = generate_slug(review.name)
+            rating = generate_stars(review.rating)
+            if review.visited:
+                text = "Visited"
+            else:
+                text = "Not Visited"
+            
+            gen_html += f"""
+                <div class="cell">
+                    <div class="card" style="height: 100%;">
+                        <div class="card-header">
+                            <div class="card-header-title">
+                                <p class="title is-4">{review.name}</p>
+                            </div>
+                            <div class="card-header-icon">
+                                <span class="tag is-warning">{review.cuisine.name}</span>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="content" style="max-height: 8rem; min-height: 6rem;" >
+                            <nav class="level">
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                        <p class="title is-5">{review.address}</p>
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                        {rating}
+                                    </div>
+                                </div>
+                                <div class="level-item has-text-centered">
+                                    <div>
+                                        <p class="title is-5">{text}</p>
+                                    </div>
+                                </div>
+                            </nav>
+                            <br />
+                            <p>
+                                {review.notes}
+                            </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            """
 
     return gen_html
 

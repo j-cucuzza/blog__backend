@@ -1,6 +1,9 @@
 import os, bcrypt
+from typing import Annotated
+from fastapi import Depends
 from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
+from database import oauth2_scheme
 
 import jwt
 
@@ -27,3 +30,14 @@ def generate_token(
 
 def decode_token(token):
     return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+
+def verify_token(token: Annotated[str, Depends(oauth2_scheme)]):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
