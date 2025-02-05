@@ -38,7 +38,8 @@ def create_review(token: Annotated[str, Depends(oauth2_scheme)],
 @router.get("/all/", response_model=list[review_model.ReviewPublicWithCuisine])
 def read_reviews(session: SessionDep):
     reviews = session.exec(
-        select(review_model.Review)
+        select(review_model.Review).order_by(review_model.Review.visited.desc(), 
+            review_model.Review.rating.desc(), review_model.Review.name)
     )
     return reviews
 
@@ -80,9 +81,11 @@ def delete_review(token: Annotated[str, Depends(oauth2_scheme)],
 @router.get("/all/html", response_class=HTMLResponse)
 def get_recipes_html(session: SessionDep, cuisine: str = "all"):
     if cuisine == "all":
-        statement = select(review_model.Review)
+        statement = select(review_model.Review).order_by(review_model.Review.visited.desc(),
+            review_model.Review.rating.desc(), review_model.Review.name)
     else:
-        statement = select(review_model.Review).where(review_model.Review.cuisine_id == int(cuisine))
+        statement = select(review_model.Review).where(review_model.Review.cuisine_id == int(cuisine)).order_by(review_model.Review.visited.desc(), 
+            review_model.Review.rating.desc(), review_model.Review.name)
     results = session.exec(statement).all()
     
     if not results:
@@ -111,7 +114,7 @@ def create_Cuisine(token: Annotated[str, Depends(oauth2_scheme)],
 def read_Cuisines(
     session: SessionDep,
 ):
-    cuisines = session.exec(select(cuisine_model.Cuisine)).all()
+    cuisines = session.exec(select(cuisine_model.Cuisine).order_by(cuisine_model.Cuisine.name)).all()
     return cuisines
 
 
@@ -129,7 +132,7 @@ def delete_cuisine(token: Annotated[str, Depends(oauth2_scheme)],
 
 @router.get("/cuisines/html", response_class=HTMLResponse)
 def get_tags_html(session: SessionDep):
-    cuisines = session.exec(select(cuisine_model.Cuisine))
+    cuisines = session.exec(select(cuisine_model.Cuisine).order_by(cuisine_model.Cuisine.name))
     html = gen_html.generate_tags(cuisines)
 
     return html

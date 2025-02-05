@@ -21,7 +21,7 @@ def generate_stars(rating: int):
     for i in range(rating):
         gen_html += f"""
             <span key={i} className="icon">
-                <i className="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star" style="color: gold;"></i>
                 </span>
             """
     
@@ -129,11 +129,31 @@ def generate_reviews(reviews: list[review_model.Review]):
         
         for review in reviews:
             slug = generate_slug(review.name)
-            rating = generate_stars(review.rating)
+            if review.rating:
+                rating = generate_stars(review.rating)
+            else: rating = ""
+
             if review.visited:
-                text = "Visited"
+                text = """
+                <div class="icon-text">
+                    <span class="title is-6">
+                        <span key={i} class="icon has-text-primary">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                    </span>
+                </div>
+                """
             else:
-                text = "Not Visited"
+                text = """
+                <div class="icon-text">
+                    
+                    <span class="title is-6">
+                        <span key={i} class="icon has-text-danger">
+                            <i class="fa-solid fa-ban"></i>
+                        </span>
+                    </span>
+                </div>
+                """
             
             gen_html += f"""
                 <div class="cell">
@@ -143,28 +163,28 @@ def generate_reviews(reviews: list[review_model.Review]):
                                 <p class="title is-4">{review.name}</p>
                             </div>
                             <div class="card-header-icon">
-                                <span class="tag is-warning">{review.cuisine.name}</span>
+                                    <div>
+                                        {text}
+                                    </div>
                             </div>
                         </div>
                         <div class="card-content">
-                            <div class="content" style="max-height: 8rem; min-height: 6rem;" >
-                            <nav class="level">
-                                <div class="level-item has-text-centered">
-                                    <div>
-                                        <p class="title is-5">{review.address}</p>
-                                    </div>
-                                </div>
-                                <div class="level-item has-text-centered">
+                            <div class="content" min-height: 6rem;" >
+                                <div class="has-text-centered">
                                     <div>
                                         {rating}
                                     </div>
                                 </div>
-                                <div class="level-item has-text-centered">
-                                    <div>
-                                        <p class="title is-5">{text}</p>
+                                <nav class="level">
+                                    <div class="level-item has-text-centered">
+                                        <div>
+                                            <p class="title is-6">{review.address}</p>
+                                        </div>
                                     </div>
+                                </nav>
+                                <div class="has-text-centered">
+                                    <span class="tag is-primary"><span class="title is-6">{review.cuisine.name.capitalize()}</span></span>
                                 </div>
-                            </nav>
                             <br />
                             <p>
                                 {review.notes}

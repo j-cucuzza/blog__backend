@@ -40,7 +40,7 @@ def read_recipes(
     offset: int = 0,
     limit: Annotated[int, Query(le=100)] = 100,
 ):
-    recipes = session.exec(select(recipe_model.Recipe).offset(offset).limit(limit)).all()
+    recipes = session.exec(select(recipe_model.Recipe).order_by(recipe_model.Recipe.name).offset(offset).limit(limit)).all()
     return recipes
 
 @router.get("/{recipe_id}", response_model=recipe_model.RecipePublic)
@@ -82,9 +82,9 @@ def delete_recipe(token: Annotated[str, Depends(oauth2_scheme)],
 @router.get("/all/html", response_class=HTMLResponse)
 def get_recipes_html(session: SessionDep, tag: str = "all"):
     if tag == "all":
-        statement = select(recipe_model.Recipe)
+        statement = select(recipe_model.Recipe).order_by(recipe_model.Recipe.name)
     else:
-        statement = select(recipe_model.Recipe).where(recipe_model.Recipe.tag_id == int(tag))
+        statement = select(recipe_model.Recipe).order_by(recipe_model.Recipe.name).where(recipe_model.Recipe.tag_id == int(tag))
     results = session.exec(statement).all()
     
     if not results:
